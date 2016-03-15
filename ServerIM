@@ -5,17 +5,15 @@ import java.net.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.util.*;
 
 public class ServerIM extends JFrame{
 
 private JTextField userText;
    private JTextArea chatWindow;
-   private PrintWriter output;
-   private BufferedReader input;
+   private ObjectOutputStream output;
+   private ObjectInputStream input;
    private ServerSocket server;
    private Socket connection;
-   private ArrayList<ClientWorker> chatters;
    
 
    public static void main(String[] args) {
@@ -28,7 +26,6 @@ private JTextField userText;
    //constructor
    public ServerIM(){
       super("Instant Messenger: Server");
-      chatters = new ArrayList<ClientWorker>();
       userText = new JTextField();
       userText.setEditable(false);
       userText.addActionListener(
@@ -52,19 +49,11 @@ private JTextField userText;
          server = new ServerSocket(6789, 100);
          while(true){
             try{
-            	ClientWorker worker;
-            	showMessage(" Waiting for clients to connect\n");
-            	connection = server.accept();
-            	showMessage("creating clientWorker\n");
-            	worker = new ClientWorker(connection);
-            	showMessage("adding clientWorker to chatter arraylist\n");
-            	chatters.add(worker);
-            	showMessage("Going into whileChatting()\n");
-                whileChatting();
+               waitForConnection();
+               setupStreams();
+               whileChatting();
             }catch(EOFException eofException){
                showMessage("\n Server ended the connection! ");
-            }catch(IOException e){
-            	
             }finally{
                close();
             }
@@ -74,20 +63,20 @@ private JTextField userText;
       }
    }
 
-//   //wait for connection, then display connection information
-//   private void waitForConnection() throws IOException{
-//      showMessage(" Waiting for someone to connect... \n");
-//      connection = server.accept();
-//      showMessage(" Now connected to " + connection.getInetAddress().getHostName());
-//   }
+   //wait for connection, then display connection information
+   private void waitForConnection() throws IOException{
+      showMessage(" Waiting for someone to connect... \n");
+      connection = server.accept();
+      showMessage(" Now connected to " + connection.getInetAddress().getHostName());
+   }
 
-//   //get stream to send and receive data
-//   private void setupStreams() throws IOException{
-//      output = new ObjectOutputStream(connection.getOutputStream());
-//      output.flush();
-//      input = new ObjectInputStream(connection.getInputStream());
-//      showMessage("\n Streams are now setup! \n");
-//   }
+   //get stream to send and receive data
+   private void setupStreams() throws IOException{
+      output = new ObjectOutputStream(connection.getOutputStream());
+      output.flush();
+      input = new ObjectInputStream(connection.getInputStream());
+      showMessage("\n Streams are now setup! \n");
+   }
 
    //during the chat conversation
    private void whileChatting() throws IOException{
@@ -96,10 +85,10 @@ private JTextField userText;
 	   ableToType(true); 
       do{
     	  try{
-    		  message = (String) input.readLine();
+    		  message = (String) input.readObject();
     		  showMessage("\n" + message); 
-    	  }catch(IOException classNotfoundException){
-    		  showMessage("\n ioException"); 
+    	  }catch(ClassNotFoundException classNotfoundException){
+    		  showMessage("\n class not found exception"); 
     	  }
       }while(!message.equals("CLIENT: END"));
    }
@@ -120,16 +109,13 @@ private JTextField userText;
 
    //send a message to client
    private void sendMessage(String message){
-//      try{
-    	  for(int i = 0; i < chatters.size(); i++){
-	         output.println("SERVER: " + message);
-	         output.flush();
-	         showMessage("\nSERVER: " + message);
-    	  }
-
-//      }catch(IOException ioException){
-//         chatWindow.append("\n ERROR: Cannot send message");
-//      }
+      try{
+         output.writeObject("SERVER: " + message);
+         output.flush();
+         showMessage("\nSERVER: " + message);
+      }catch(IOException ioException){
+         chatWindow.append("\n ERROR: Cannot send message");
+      }
    }
 
    //updates chatWindow
