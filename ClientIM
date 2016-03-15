@@ -1,10 +1,12 @@
+package im;
+
 import java.io.*;
 import java.net.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class Client extends JFrame{
+public class ClientIM extends JFrame{
 
    private JTextField userText;
    private JTextArea chatWindow;
@@ -16,16 +18,16 @@ public class Client extends JFrame{
 
    
    public static void main(String[] args) {
-	      Client charlie;
-	      charlie = new Client("127.0.0.1");
+	      ClientIM charlie;
+	      charlie = new ClientIM("127.0.0.1");
 	      charlie.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	      charlie.startRunning();
 	   }
    
    
    //constructor
-   public Client(String host){
-      super("Client mofo!");
+   public ClientIM(String host){
+      super("Instant Messenger: Client");
       serverIP = host;
       userText = new JTextField();
       userText.setEditable(false);
@@ -37,10 +39,10 @@ public class Client extends JFrame{
             }
          }
       );
-      add(userText, BorderLayout.NORTH);
+      add(userText, BorderLayout.SOUTH);
       chatWindow = new JTextArea();
       add(new JScrollPane(chatWindow), BorderLayout.CENTER);
-      setSize(300,150);
+      setSize(800,600);
       setVisible(true);
    }
 
@@ -55,7 +57,7 @@ public class Client extends JFrame{
       }catch(IOException ioException){
          ioException.printStackTrace();
       }finally{
-         closeCrap();
+         close();
       }
    }
 
@@ -74,7 +76,7 @@ public class Client extends JFrame{
       showMessage("\n Dude your streams are now good to go! \n");
    }
 
-   //while chatting with server
+   //while chat with server
    private void whileChatting() throws IOException{
       ableToType(true);
       do{
@@ -84,12 +86,12 @@ public class Client extends JFrame{
          }catch(ClassNotFoundException classNotfoundException){
             showMessage("\n I dont know that object type");
          }
-      }while(!message.equals("SERVER - END"));
+      }while(!message.equals("SERVER: END"));
    }
 
    //close the streams and sockets
-   private void closeCrap(){
-      showMessage("\n closing crap down...");
+   private void close(){
+      showMessage("\n closing down...");
       ableToType(false);
       try{
          output.close();
@@ -103,11 +105,11 @@ public class Client extends JFrame{
    //send messages to server
    private void sendMessage(String message){
       try{
-         output.writeObject("CLIENT - " + message);
+         output.writeObject("CLIENT: " + message);
          output.flush();
-         showMessage("\nCLIENT - " + message);
+         showMessage("\nCLIENT: " + message);
       }catch(IOException ioException){
-         chatWindow.append("\n something messed up sending message hoss!");
+         chatWindow.append("\n Error in sending message");
       }
    }
 
@@ -122,7 +124,7 @@ public class Client extends JFrame{
       );
    }
 
-   //gives user permission to type crap into the text box
+   //allows user to type text into text box
    private void ableToType(final boolean tof){
       SwingUtilities.invokeLater(
          new Runnable(){
@@ -133,4 +135,3 @@ public class Client extends JFrame{
       );      
    }
 }
-
