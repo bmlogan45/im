@@ -1,3 +1,4 @@
+package im;
 
 import java.io.*;
 import java.net.*;
@@ -5,7 +6,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class server extends JFrame{
+public class ServerIM extends JFrame{
 
 private JTextField userText;
    private JTextArea chatWindow;
@@ -16,15 +17,15 @@ private JTextField userText;
    
 
    public static void main(String[] args) {
-	      server sally = new server();
+	      ServerIM sally = new ServerIM();
 	      sally.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	      sally.startRunning();
 	   }
    
    
    //constructor
-   public server(){
-      super("Buckys Instant Messenger");
+   public ServerIM(){
+      super("Instant Messenger: Server");
       userText = new JTextField();
       userText.setEditable(false);
       userText.addActionListener(
@@ -35,13 +36,13 @@ private JTextField userText;
             }
          }
       );
-      add(userText, BorderLayout.NORTH);
+      add(userText, BorderLayout.SOUTH);
       chatWindow = new JTextArea();
       add(new JScrollPane(chatWindow));
-      setSize(300,150);
+      setSize(800,600);
       setVisible(true);
    }
-
+   
    //set up and run the server
    public void startRunning(){
       try{
@@ -54,7 +55,7 @@ private JTextField userText;
             }catch(EOFException eofException){
                showMessage("\n Server ended the connection! ");
             }finally{
-               closeCrap();
+               close();
             }
          }
       }catch(IOException ioException){
@@ -87,14 +88,14 @@ private JTextField userText;
     		  message = (String) input.readObject();
     		  showMessage("\n" + message); 
     	  }catch(ClassNotFoundException classNotfoundException){
-    		  showMessage("\n I don't know that object type"); 
+    		  showMessage("\n class not found exception"); 
     	  }
-      }while(!message.equals("CLIENT - END"));
+      }while(!message.equals("CLIENT: END"));
    }
 
 
    //close streams and sockets after you are done chatting
-   private void closeCrap(){
+   private void close(){
       showMessage("\n Closing connections... \n");
       ableToType(false);
       try{
@@ -109,11 +110,11 @@ private JTextField userText;
    //send a message to client
    private void sendMessage(String message){
       try{
-         output.writeObject("SERVER - " + message);
+         output.writeObject("SERVER: " + message);
          output.flush();
-         showMessage("\nSERVER - " + message);
+         showMessage("\nSERVER: " + message);
       }catch(IOException ioException){
-         chatWindow.append("\n ERROR: DUDE I CANT SEND THAT MESSAGE");
+         chatWindow.append("\n ERROR: Cannot send message");
       }
    }
 
@@ -140,5 +141,3 @@ private JTextField userText;
    }
 
 }
-
-
