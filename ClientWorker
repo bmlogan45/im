@@ -1,0 +1,39 @@
+package im;
+
+import java.io.*;
+import java.net.*;
+import java.lang.*;
+
+public class ClientWorker implements Runnable {
+	private Socket client;
+	private Thread t;
+	
+	//constructor with parameter
+	public ClientWorker(Socket a){
+		client = a;
+		t = new Thread(this);
+		t.start();
+	}
+	
+	//run method since using Runnable interface
+	public void run(){
+		try{
+			BufferedReader input = null;
+			PrintWriter output = null;
+			String data = " ";
+			
+			input = new BufferedReader(new InputStreamReader(client.getInputStream()));
+			output = new PrintWriter(client.getOutputStream(), true);
+			
+			while(true){
+				data = input.readLine();
+				output.println(data);
+			}
+		}catch(IOException e){
+			e.printStackTrace();
+			System.exit(0);
+		}
+	}
+	
+
+}
