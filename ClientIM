@@ -73,7 +73,7 @@ public class ClientIM extends JFrame{
       output = new ObjectOutputStream(connection.getOutputStream());
       output.flush();
       input = new ObjectInputStream(connection.getInputStream());
-      showMessage("\n Dude your streams are now good to go! \n");
+      showMessage("\n Streams are now good to go! \n");
    }
 
    //while chat with server
