@@ -37,19 +37,16 @@ public class Gui extends JFrame {
         what.setBounds(40, 180, 200, 25);
         no.setBounds(40, 230, 200, 25);
         
-        // Add action listeners to the buttons
         sendMsg.addActionListener(new ButtonListener());
         sendFile.addActionListener(new ButtonListener());
         what.addActionListener(new ButtonListener());
         no.addActionListener(new ButtonListener());
 
-        // Add buttons to panel
         panel.add(sendMsg);
         panel.add(sendFile);
         panel.add(what);
         panel.add(no);
 
-        // Add panel to JFrame
         add(panel);
         add(statusbar, BorderLayout.SOUTH);
 
