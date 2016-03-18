@@ -1,0 +1,107 @@
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.*;
+
+public class Gui {
+	
+	JTextField userText;  
+	JTextArea chatWindow;
+	JButton sendFile; 
+	JButton sendMessage; 
+    JFrame window; 
+    
+    Gui() {
+    	go(); 
+    }
+    	
+    public void go(){
+    	window = new JFrame("Chat Room"); 
+    	window.setBackground(Color.blue);
+    	window.setSize(400, 300);
+    	
+    	JPanel panel1 = new JPanel(new BorderLayout()); 
+    	panel1.setBackground(Color.GRAY);
+
+    	 	
+    	userText = new JTextField(15); 
+    	JPanel border = new JPanel(); 
+    	border.setBackground(Color.GRAY);
+    	panel1.add(userText, "Center");
+    	sendMessage = new JButton("Send"); 
+    	panel1.add(sendMessage, "East"); 
+    	panel1.add(border, "North");
+    	
+    	JPanel panel2 = new JPanel(new BorderLayout());
+    	chatWindow = new JTextArea(); 
+    	panel2.add(chatWindow); 
+    	
+  
+    	JPanel panel3 = new JPanel();
+    	panel3.setLayout(new BorderLayout());
+    	JPanel filler1 = new JPanel();
+    	JPanel filler2 = new JPanel();
+    	JPanel filler3 = new JPanel();
+    	JPanel filler4 = new JPanel();
+    	
+    	filler1.setBackground(Color.GRAY);
+    	filler2.setBackground(Color.GRAY);
+    	filler3.setBackground(Color.GRAY);
+    	filler4.setBackground(Color.GRAY);
+
+    	
+    	JPanel panelsmosh = new JPanel();
+
+    	panelsmosh.setBackground(Color.GRAY);    	
+    	sendFile = new JButton("Send File");  
+    	panelsmosh.add(sendFile); 
+    	panelsmosh.setLayout(new GridBagLayout());
+    	GridBagConstraints c = new GridBagConstraints();
+    	c.fill = GridBagConstraints.HORIZONTAL;
+    	c.gridx = 0;
+    	c.gridy = 0;
+    	panelsmosh.add(sendFile, c);
+ 
+
+    	
+    
+
+    	panel3.setBackground(Color.GRAY);
+     	panel3.add(panelsmosh, "Center");    	
+    	panel3.add(filler1,"North"); 
+    	panel3.add(filler2,"South"); 
+    	panel3.add(filler3, "West");
+    	panel3.add(filler4, "East");
+
+    	
+    	JPanel panel4 = new JPanel(); 
+    	panel4.setBackground(Color.GRAY);
+    	
+
+    	
+    	JPanel panel5 = new JPanel();
+    	panel5.setBackground(Color.GRAY);
+
+    	
+    	
+    	window.getContentPane().add(panel1, "South"); 
+    	window.getContentPane().add(panel2, "Center"); 
+    	window.getContentPane().add(panel3, "West"); 
+    	window.getContentPane().add(panel4, "North"); 
+    	window.getContentPane().add(panel5, "East"); 
+    	
+    	window.setVisible(true);
+   }   
+               
+    
+
+    public static void main(String[] args) {
+
+    	Gui gui = new Gui();
+
+    }
+}
